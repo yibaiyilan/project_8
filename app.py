@@ -124,17 +124,17 @@ def make_figure(varname):
     mygraphtitle = f'Female Rate for Bachelor Degree of {varname} in 2019'
     mycolorscale = 'Sunset' # Note: The error message will list possible color scales.
     
-    se = pd.DataFrame(df,columns = ['Code','Sex',{varname}])
-    se[{varname}] = se[{varname}].replace(",","", regex=True).astype(float)
-    total_se = se[se['Sex']=='Total'].groupby(['Code'],as_index = False).sum().rename(columns={{varname}:"Total"})
-    female_se = se[se['Sex']=='Female'].groupby(['Code'],as_index = False).sum().rename(columns={{varname}:"Female"})
+    se = pd.DataFrame(df,columns = ['Code','Sex',varname])
+    se[varname] = se[varname].replace(",","", regex=True).astype(float)
+    total_se = se[se['Sex']=='Total'].groupby(['Code'],as_index = False).sum().rename(columns={varname:"Total"})
+    female_se = se[se['Sex']=='Female'].groupby(['Code'],as_index = False).sum().rename(columns={varname:"Female"})
     female_rate_se = pd.DataFrame()
-    female_rate_se['Code'] = sex['Code']
+    female_rate_se['Code']  = df['State'].map(us_state_to_abbrev)
     female_rate_se = pd.merge(female_se,total_se,on=['Code'])
-    female_rate_se['Female Rateß'] = female_rate_se['Female']/female_rate_se['Total']
-    
+    female_rate_se['Female Rate'] = female_rate_se['Female']/female_rate_se['Total']
+
     data=go.Choropleth(
-        locations=df['Code'], # Spatial coordinates
+        locations=female_rate_se['Code'], # Spatial coordinates
         locationmode = 'USA-states', # set of locations match entries in `locations`
         z = female_rate_se['Female Rate'].astype(float), # Data to be color-coded
         colorscale = mycolorscale,
