@@ -101,7 +101,12 @@ app.layout = html.Div(children=[
         html.Div([
                 html.H6('Select a major for analysis:'),
                 dcc.Dropdown(
-                    id='options-drop',
+                    id='options-drop1',
+                    options=[{'label': i, 'value': i} for i in list_of_columns],
+                    value='Bachelor\'s Degree Holders'
+                ),
+                dcc.Dropdown(
+                    id='options-drop2',
                     options=[{'label': i, 'value': i} for i in list_of_columns],
                     value='Bachelor\'s Degree Holders'
                 ),
@@ -109,6 +114,10 @@ app.layout = html.Div(children=[
         html.Div([dcc.Graph(id='figure-1'),
             ], className='five columns'),
         html.Div([dcc.Graph(id='figure-2'),
+            ], className='five columns'),
+        html.Div([dcc.Graph(id='figure-3'),
+            ], className='five columns'),
+        html.Div([dcc.Graph(id='figure-4'),
             ], className='five columns'),
     ], className='twelve columns'),
     html.A('Code on Github', href=githublink),
@@ -121,7 +130,10 @@ app.layout = html.Div(children=[
 # make a function that can intake any varname and produce a map.
 @app.callback(Output('figure-1', 'figure'),
              Output('figure-2', 'figure'),
-             Input('options-drop', 'value'))
+             Output('figure-3', 'figure'),
+             Output('figure-4', 'figure'),
+             Input('options-drop1', 'value'),
+             Input('options-drop2', 'value'))
 def make_figure(varname):
     mycolorbartitle = "Bachelor Degree Holders"
     mygraphtitle = f'Female Rate for Bachelor Degree of {varname} in 2019'
@@ -152,7 +164,9 @@ def make_figure(varname):
     )
     fig1=fig
     fig2=fig
-    return fig1,fig2
+    fig3=fig
+    fig4=fig
+    return fig1,fig2,fig3,fig4
 
 
 
