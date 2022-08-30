@@ -107,7 +107,9 @@ app.layout = html.Div(children=[
                 ),
         ], className='two columns'),
         html.Div([dcc.Graph(id='figure-1'),
-            ], className='ten columns'),
+            ], className='five columns'),
+        html.Div([dcc.Graph(id='figure-2'),
+            ], className='five columns'),
     ], className='twelve columns'),
     html.A('Code on Github', href=githublink),
     html.Br(),
@@ -118,7 +120,8 @@ app.layout = html.Div(children=[
 
 # make a function that can intake any varname and produce a map.
 @app.callback(Output('figure-1', 'figure'),
-             [Input('options-drop', 'value')])
+             Output('figure-2', 'figure'),
+             Input('options-drop', 'value'))
 def make_figure(varname):
     mycolorbartitle = "Bachelor Degree Holders"
     mygraphtitle = f'Female Rate for Bachelor Degree of {varname} in 2019'
@@ -147,7 +150,9 @@ def make_figure(varname):
         width=1200,
         height=800
     )
-    return fig
+    fig1=fig
+    fig2=fig
+    return fig1,fig2
 
 
 
