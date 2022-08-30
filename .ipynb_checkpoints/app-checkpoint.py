@@ -134,15 +134,15 @@ app.layout = html.Div(children=[
              Output('figure-4', 'figure'),
              Input('options-drop1', 'value'),
              Input('options-drop2', 'value'))
-def make_figure(varname):
+def make_figure(varname1,varname2):
     mycolorbartitle = "Bachelor Degree Holders"
-    mygraphtitle = f'Female Rate for Bachelor Degree of {varname} in 2019'
+    mygraphtitle = f'Female Rate for Bachelor Degree of {varname1} in 2019'
     mycolorscale = 'Sunset' # Note: The error message will list possible color scales.
     
-    se = pd.DataFrame(df,columns = ['Code','Sex',varname])
-    se[varname] = se[varname].replace(",","", regex=True).astype(float)
-    total_se = se[se['Sex']=='Total'].groupby(['Code'],as_index = False).sum().rename(columns={varname:"Total"})
-    female_se = se[se['Sex']=='Female'].groupby(['Code'],as_index = False).sum().rename(columns={varname:"Female"})
+    se = pd.DataFrame(df,columns = ['Code','Sex',varname1])
+    se[varname1] = se[varname1].replace(",","", regex=True).astype(float)
+    total_se = se[se['Sex']=='Total'].groupby(['Code'],as_index = False).sum().rename(columns={varname1:"Total"})
+    female_se = se[se['Sex']=='Female'].groupby(['Code'],as_index = False).sum().rename(columns={varname1:"Female"})
     female_rate_se = pd.DataFrame()
     female_rate_se['Code']  = df['State'].map(us_state_to_abbrev)
     female_rate_se = pd.merge(female_se,total_se,on=['Code'])
@@ -155,13 +155,14 @@ def make_figure(varname):
         colorscale = mycolorscale,
         colorbar_title = mycolorbartitle,
     )
-    fig = go.Figure(data)
-    fig.update_layout(
+    fig1 = go.Figure(data)
+    fig1.update_layout(
         title_text = mygraphtitle,
         geo_scope='usa',
         width=1200,
         height=800
     )
+    
     fig1=fig
     fig2=fig
     fig3=fig
