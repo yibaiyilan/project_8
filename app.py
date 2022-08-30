@@ -109,7 +109,7 @@ app.layout = html.Div(children=[
                     id='options-drop2',
                     options=[{'label': i, 'value': i} for i in list_of_columns],
                     value='Bachelor\'s Degree Holders'
-                )
+                ),
         ], className='two columns'),
         html.Div([dcc.Graph(id='figure-1'),
             ], className='five columns'),
@@ -132,8 +132,8 @@ app.layout = html.Div(children=[
              Output('figure-2', 'figure'),
              Output('figure-3', 'figure'),
              Output('figure-4', 'figure'),
-             [Input('options-drop1', 'value'),
-             Input('options-drop2', 'value')])
+             Input('options-drop1', 'value'),
+             Input('options-drop2', 'value'))
 def make_figure(varname1,varname2):
     mycolorbartitle = "Bachelor Degree Holders"
     mygraphtitle = f'Female Rate for Bachelor Degree of {varname1} in 2019'
@@ -155,8 +155,8 @@ def make_figure(varname1,varname2):
         colorscale = mycolorscale,
         colorbar_title = mycolorbartitle,
     )
-    fig1 = go.Figure(data)
-    fig1.update_layout(
+    fig = go.Figure(data)
+    fig.update_layout(
         title_text = mygraphtitle,
         geo_scope='usa',
         width=1200,
