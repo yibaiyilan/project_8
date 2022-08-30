@@ -109,7 +109,7 @@ app.layout = html.Div(children=[
                     id='options-drop2',
                     options=[{'label': i, 'value': i} for i in list_of_columns],
                     value='Bachelor\'s Degree Holders'
-                ),
+                )
         ], className='two columns'),
         html.Div([dcc.Graph(id='figure-1'),
             ], className='five columns'),
