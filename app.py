@@ -132,8 +132,8 @@ app.layout = html.Div(children=[
              Output('figure-2', 'figure'),
              Output('figure-3', 'figure'),
              Output('figure-4', 'figure'),
-             Input('options-drop1', 'value'),
-             Input('options-drop2', 'value'))
+             [Input('options-drop1', 'value'),
+             Input('options-drop2', 'value')])
 def make_figure(varname1,varname2):
     mycolorbartitle = "Bachelor Degree Holders"
     mygraphtitle = f'Female Rate for Bachelor Degree of {varname1} in 2019'
