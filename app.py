@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import os
 import plotly as py
+import plotly.express as px
 
 # from plotly.graph_objs import *
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
@@ -105,16 +106,21 @@ app.layout = html.Div(children=[
                     options=[{'label': i, 'value': i} for i in list_of_columns],
                     value='Bachelor\'s Degree Holders'
                 ),
+        ], className='two columns'),
+        html.Div([dcc.Graph(id='figure-1'),
+            ], className='five columns'),
+        html.Div([dcc.Graph(id='figure-2'),
+            ], className='five columns'),
+    ], className='twelve columns'),
+    html.Div([
+        html.Div([
+                html.H6('Select a major for analysis:'),
                 dcc.Dropdown(
                     id='options-drop2',
                     options=[{'label': i, 'value': i} for i in list_of_columns],
                     value='Bachelor\'s Degree Holders'
                 ),
         ], className='two columns'),
-        html.Div([dcc.Graph(id='figure-1'),
-            ], className='five columns'),
-        html.Div([dcc.Graph(id='figure-2'),
-            ], className='five columns'),
         html.Div([dcc.Graph(id='figure-3'),
             ], className='five columns'),
         html.Div([dcc.Graph(id='figure-4'),
@@ -130,44 +136,44 @@ app.layout = html.Div(children=[
 # make a function that can intake any varname and produce a map.
 @app.callback(Output('figure-1', 'figure'),
              Output('figure-2', 'figure'),
-             Output('figure-3', 'figure'),
-             Output('figure-4', 'figure'),
-             Input('options-drop1', 'value'),
-             Input('options-drop2', 'value'))
-def make_figure(varname1,varname2):
+             Input('options-drop1', 'value'),)
+
+def make_figure(varname):
     mycolorbartitle = "Bachelor Degree Holders"
-    mygraphtitle = f'Female Rate for Bachelor Degree of {varname1} in 2019'
+    mygraphtitle = f'Female Rate for Bachelor Degree of {varname} in 2019'
     mycolorscale = 'Sunset' # Note: The error message will list possible color scales.
     
-    se = pd.DataFrame(df,columns = ['Code','Sex',varname1])
-    se[varname1] = se[varname1].replace(",","", regex=True).astype(float)
-    total_se = se[se['Sex']=='Total'].groupby(['Code'],as_index = False).sum().rename(columns={varname1:"Total"})
-    female_se = se[se['Sex']=='Female'].groupby(['Code'],as_index = False).sum().rename(columns={varname1:"Female"})
-    female_rate_se = pd.DataFrame()
-    female_rate_se['Code']  = df['State'].map(us_state_to_abbrev)
-    female_rate_se = pd.merge(female_se,total_se,on=['Code'])
-    female_rate_se['Female Rate'] = female_rate_se['Female']/female_rate_se['Total']
+    major = pd.DataFrame(df,columns = ['Code','Sex',varname])
+    major[varname] = major[varname].replace(",","", regex=True).astype(float)
+    total = major[major['Sex']=='Total'].groupby(['Code'],as_index = False).sum().rename(columns={varname:"Total"})
+    female = major[major['Sex']=='Female'].groupby(['Code'],as_index = False).sum().rename(columns={varname:"Female"})
+    male = major[major['Sex']=='Female'].groupby(['Code'],as_index = False).sum().rename(columns={varname:"Male"})
+    female_rate = pd.DataFrame()
+    female_rate['Code']  = df['State'].map(us_state_to_abbrev)
+    female_rate = pd.merge(female,male,on=['Code']).merge(total,on=['Code'])
+    female_rate['Female Rate'] = female_rate['Female']/female_rate['Total']
 
-    data=go.Choropleth(
-        locations=female_rate_se['Code'], # Spatial coordinates
+    data1=go.Choropleth(
+        locations=female_rate['Code'], # Spatial coordinates
         locationmode = 'USA-states', # set of locations match entries in `locations`
-        z = female_rate_se['Female Rate'].astype(float), # Data to be color-coded
+        z = female_rate['Female Rate'].astype(float), # Data to be color-coded
         colorscale = mycolorscale,
         colorbar_title = mycolorbartitle,
     )
-    fig = go.Figure(data)
-    fig.update_layout(
+    fig1 = go.Figure(data1)
+    fig1.update_layout(
         title_text = mygraphtitle,
         geo_scope='usa',
         width=1200,
         height=800
     )
+    data2 = df[['Code','Sex',varname]]
+    data2[varname] = data2[varname].replace(",","", regex=True).astype(float)
+    data2 = data2[data2['Sex']!='Total'].groupby(['Code','Sex'],as_index = False).sum()
+    fig2 = px.bar(data2, x="Code", y=varname, 
+             color="Sex", barmode="group")
     
-    fig1=fig
-    fig2=fig
-    fig3=fig
-    fig4=fig
-    return fig1,fig2,fig3,fig4
+    return fig1,fig2
 
 
 
