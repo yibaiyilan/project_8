@@ -187,7 +187,7 @@ def make_figure(varname):
 def figure_callback1(varname):
     return make_figure(varname)
 
-@app.callback(Output('figure-3' 'figure'),
+@app.callback(Output('figure-3', 'figure'),
              Output('figure-4', 'figure'),
              Input('options-drop2', 'value'))
 
