@@ -104,7 +104,7 @@ app.layout = html.Div(children=[
                 dcc.Dropdown(
                     id='options-drop1',
                     options=[{'label': i, 'value': i} for i in list_of_columns],
-                    value='Bachelor\'s Degree Holders'
+                    value='Science and Engineering'
                 ),
         ], className='two columns'),
         html.Div([dcc.Graph(id='figure-1'),
@@ -118,7 +118,7 @@ app.layout = html.Div(children=[
                 dcc.Dropdown(
                     id='options-drop2',
                     options=[{'label': i, 'value': i} for i in list_of_columns],
-                    value='Bachelor\'s Degree Holders'
+                    value='Arts, Humanities and Others'
                 ),
         ], className='two columns'),
         html.Div([dcc.Graph(id='figure-3'),
