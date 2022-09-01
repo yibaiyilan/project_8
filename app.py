@@ -162,7 +162,7 @@ def make_figure(varname):
         title_text = mygraphtitle,
         geo_scope='usa',
         width=1200,
-        height=800
+        height=500
     )
     
     data2 = df[['Code','Sex',varname]]
@@ -173,7 +173,7 @@ def make_figure(varname):
                  color="Sex", barmode="group",color_discrete_sequence=color_discrete_sequence)
     fig2.update_layout(
         width=1200,
-        height=800,
+        height=500,
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)'
     )
