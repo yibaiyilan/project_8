@@ -134,9 +134,6 @@ app.layout = html.Div(children=[
 
 
 # make a function that can intake any varname and produce a map.
-@app.callback(Output('figure-1', 'figure'),
-             Output('figure-2', 'figure'),
-             Input('options-drop1', 'value'),)
 
 def make_figure(varname):
     mycolorbartitle = "Bachelor Degree Holders"
@@ -167,15 +164,35 @@ def make_figure(varname):
         width=1200,
         height=800
     )
+    
     data2 = df[['Code','Sex',varname]]
     data2[varname] = data2[varname].replace(",","", regex=True).astype(float)
     data2 = data2[data2['Sex']!='Total'].groupby(['Code','Sex'],as_index = False).sum()
+    color_discrete_sequence = ['#009ACD','#FFB6C1']
     fig2 = px.bar(data2, x="Code", y=varname, 
-             color="Sex", barmode="group")
+                 color="Sex", barmode="group",color_discrete_sequence=color_discrete_sequence)
+    fig2.update_layout(
+        width=1200,
+        height=800,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
     
     return fig1,fig2
 
+@app.callback(Output('figure-1', 'figure'),
+             Output('figure-2', 'figure'),
+             Input('options-drop1', 'value'))
 
+def figure_callback1(varname):
+    return make_figure(varname)
+
+@app.callback(Output('figure-3' 'figure'),
+             Output('figure-4', 'figure'),
+             Input('options-drop2', 'value'))
+
+def figure_callback2(varname):
+    return make_figure(varname)
 
 ############ Deploy
 if __name__ == '__main__':
